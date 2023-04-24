@@ -1,0 +1,4 @@
+---
+text_sensor:
+  - !include text-sensor/version.yaml
+  - !include text-sensor/wifi-info.yaml

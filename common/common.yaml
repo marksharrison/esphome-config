@@ -1,0 +1,6 @@
+---
+<<: !include api.yaml
+<<: !include ota.yaml
+<<: !include text-sensors.yaml
+<<: !include web-server.yaml
+<<: !include wifi.yaml

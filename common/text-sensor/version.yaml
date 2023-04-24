@@ -1,0 +1,4 @@
+---
+platform: version
+name: ${name} ESPHome version
+hide_timestamp: true

@@ -1,0 +1,90 @@
+---
+substitutions:
+  description: "TBD"
+  device: sonoff-s55-01
+  location: garage
+  name: "Sonoff S55 01"
+  reboot_timeout: 14d
+  update_interval: 10min
+
+esphome:
+  comment: ${description}
+  name: ${device}
+  name_add_mac_suffix: false
+  platform: ESP8266
+  project:
+    name: TBD
+    version: 0.0
+  on_boot:
+    priority: -10
+    then:
+      - light.turn_on:
+          brightness: 100%
+          effect: slow_pulse
+          id: led_light
+
+esp8266:
+  board: esp01_1m
+  restore_from_flash: true
+
+<<: !include common/common.yaml
+<<: !include common/logger.yaml
+
+binary_sensor:
+  - !include common/binary-sensor/status.yaml
+  - platform: gpio
+    id: button
+    name: ${name} button
+    pin:
+      inverted: true
+      mode: INPUT_PULLUP
+      number: GPIO0
+    on_press:
+      - switch.toggle: relay
+
+sensor:
+  - !include common/sensor/uptime.yaml
+  - !include common/sensor/wifi-signal.yaml
+
+switch:
+  - !include common/switch/restart.yaml
+  - platform: gpio
+    id: relay
+    name: ${name} relay
+    pin: GPIO12
+    restore_mode: RESTORE_DEFAULT_OFF
+
+output:
+  # register status LED as dimmable output
+  - platform: esp8266_pwm
+    id: status_led
+    inverted: true
+    pin: GPIO13
+
+light:
+  # define status LED as a light
+  - platform: monochromatic
+    id: led_light
+    name: ${name} status LED
+    output: status_led
+    effects:
+      - pulse:
+          name: fast_pulse
+          transition_length: 0.5s
+          update_interval: 0.5s
+      - pulse:
+          name: slow_pulse
+          transition_length: 2s
+          update_interval: 2s
+
+text_sensor:
+  - platform: version
+    name: "ESPHome version"
+    hide_timestamp: true
+  - platform: wifi_info
+    ip_address:
+      name: "IP address"
+    ssid:
+      name: "Wi-Fi SSID"
+    bssid:
+      name: "Wi-Fi BSSID"

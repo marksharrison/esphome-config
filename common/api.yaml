@@ -1,0 +1,6 @@
+---
+api:
+  encryption:
+    key: !secret api_encryption_key
+  port: 6053
+  reboot_timeout: ${reboot_timeout}

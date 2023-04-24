@@ -1,0 +1,4 @@
+---
+# expose device API connectivity status
+platform: status
+name: ${name} API status
